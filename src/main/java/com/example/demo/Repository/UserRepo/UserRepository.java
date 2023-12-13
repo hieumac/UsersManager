@@ -1,12 +1,11 @@
-package com.example.demo.Repository;
+package com.example.demo.Repository.UserRepo;
 
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.User.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository

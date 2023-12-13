@@ -3,21 +3,19 @@ package com.example.demo.Service;
 import com.example.demo.Auth.RegisterRequest;
 import com.example.demo.Auth.ResponseHandler;
 import com.example.demo.Entity.Role;
-import com.example.demo.Entity.User;
-import com.example.demo.Repository.RoleRepository;
-import com.example.demo.Repository.UserRepository;
+import com.example.demo.Entity.User.User;
+import com.example.demo.Redis.RedisServiceImp;
+import com.example.demo.Repository.UserRepo.RoleRepository;
+import com.example.demo.Repository.UserRepo.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,21 +30,30 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     @Autowired
     private final RoleRepository roleRepository;
+    @Autowired
+    private final RedisServiceImp redisServiceImp;
 
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public ResponseEntity<Object> getAllUser() {
+    public ResponseEntity<Object> getAllUser() throws JsonProcessingException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             if (hasAdminAuthority(authentication)) {
                 // Người dùng có quyền ROLE_ADMIN, trả về danh sách tất cả người dùng
-                List<User> userList = userRepository.findUsers();
-                return ResponseHandler.responseBuilder("Lấy danh sách Users thành công", HttpStatus.OK, userList);
+                List<Object> userList = redisServiceImp.getAll("users");
+                if(userList == null) {
+                    userList = Collections.singletonList(userRepository.findUsers());
+                    if(userList != null) {
+                        redisServiceImp.saveAll(userList,"users");
+                    }
+                    return ResponseHandler.responseBuilder("Lấy danh sách Users từ sql thành công", HttpStatus.OK, userList);
+                }
+                return ResponseHandler.responseBuilder("Lấy danh sách Users từ redis thành công", HttpStatus.OK, userList);
             } else if (hasUserAuthority(authentication)) {
                 // Người dùng có quyền ROLE_USER, trả về danh sách người dùng có quyền ROLE_USER
                 List<User> userList = userRepository.findUsersByRoleName("ROLE_USER");
-                return ResponseHandler.responseBuilder("Lấy danh sách Users thành công", HttpStatus.OK, userList);
+                return ResponseHandler.responseBuilder("Lấy danh sách Users \"ROLE_USER\" thành công", HttpStatus.OK, userList);
             } else {
                 // Người dùng không có quyền hạn thích hợp
                 return ResponseHandler.responseBuilder("Bạn không có quyền truy cập danh sách người dùng", HttpStatus.UNAUTHORIZED, "");
@@ -68,10 +75,10 @@ public class UserServiceImp implements UserService {
            return ResponseHandler.responseBuilder("Email đã tồn tại", HttpStatus.CONFLICT, "");
        }
         // Kiểm tra xem Role đã tồn tại trong cơ sở dữ liệu hay chưa
-        Role role = roleRepository.findRoleByName("ROLE_USER");
+        Role role = roleRepository.findRoleByName("ROLE_ADMIN");
         if (role == null) {
             // Nếu Role chưa tồn tại, tạo mới và lưu vào cơ sở dữ liệu
-            role = new Role("ROLE_USER");
+            role = new Role("ROLE_ADMIN");
             roleRepository.save(role);
         }
 

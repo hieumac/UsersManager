@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "29547174623",
+    "firebase_url": "https://earnest-setup-363908-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "earnest-setup-363908",
+    "storage_bucket": "earnest-setup-363908.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:29547174623:android:ed73609ba3dc43ce53a76a",
+        "android_client_info": {
+          "package_name": "com.ss.demo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzR3Kf6XaEpaBpyY4CHARAgcJ9WK3esic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.example.demo.Entity;
 
+import com.example.demo.Entity.User.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;

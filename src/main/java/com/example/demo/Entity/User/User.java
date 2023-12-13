@@ -1,13 +1,13 @@
-package com.example.demo.Entity;
+package com.example.demo.Entity.User;
 
+import com.example.demo.Entity.Customer.CustomerListener;
+import com.example.demo.Entity.Role;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.sql.Date;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @Table(name = "users")
+@EntityListeners(CustomerListener.class)
 public class User implements UserDetails {
 
     @Id

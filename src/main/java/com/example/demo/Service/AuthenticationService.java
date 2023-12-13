@@ -1,13 +1,11 @@
 package com.example.demo.Service;
 
 import com.example.demo.Auth.AuthenticationRequest;
-import com.example.demo.Auth.AuthenticationResponse;
-import com.example.demo.Auth.RegisterRequest;
 import com.example.demo.Auth.ResponseHandler;
 import com.example.demo.Entity.Role;
-import com.example.demo.Entity.User;
-import com.example.demo.Repository.RoleCustomRepository;
-import com.example.demo.Repository.UserRepository;
+import com.example.demo.Entity.User.User;
+import com.example.demo.Repository.UserRepo.RoleCustomRepository;
+import com.example.demo.Repository.UserRepo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +13,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;

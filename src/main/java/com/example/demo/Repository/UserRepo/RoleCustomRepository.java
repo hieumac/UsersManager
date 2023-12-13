@@ -1,7 +1,7 @@
-package com.example.demo.Repository;
+package com.example.demo.Repository.UserRepo;
 
 import com.example.demo.Entity.Role;
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.User.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.hibernate.Session;

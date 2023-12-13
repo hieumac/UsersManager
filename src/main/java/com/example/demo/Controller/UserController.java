@@ -1,30 +1,29 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Auth.RegisterRequest;
-import com.example.demo.Auth.ResponseHandler;
-import com.example.demo.Entity.User;
+import com.example.demo.Entity.User.User;
+import com.example.demo.Firebase.PushNotificationRequest;
 import com.example.demo.Service.AuthenticationService;
+import com.example.demo.Firebase.FirebaseMessageService;
 import com.example.demo.Service.UserServiceImp;
-import jakarta.persistence.criteria.CriteriaBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final UserServiceImp userServiceImp;
-    private final AuthenticationService authService;
-
     @Autowired
-    public UserController(UserServiceImp userServiceImp, AuthenticationService authService) {
-        this.userServiceImp = userServiceImp;
-        this.authService = authService;
-    }
+    private UserServiceImp userServiceImp;
+    @Autowired
+    private AuthenticationService authService;
+
     @GetMapping("/listUsers")
-    public ResponseEntity<Object> getAllUser(){
+    public ResponseEntity<Object> getAllUser() throws JsonProcessingException {
         return userServiceImp.getAllUser();
     }
     @PostMapping("/addNewUser")
@@ -33,7 +32,7 @@ public class UserController {
     }
     @GetMapping("/idUpdate/{userId}")
     public ResponseEntity<Object> getUserByIdUpdate(
-            @PathVariable("userId") Integer userId){
+            @PathVariable("userId") Integer userId) throws JsonProcessingException {
        return userServiceImp.getUserById(userId);
     }
     @PutMapping("/update/{userId}")
