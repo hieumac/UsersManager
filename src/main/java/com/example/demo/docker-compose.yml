@@ -1,22 +1,71 @@
 version: '3.7'
 
 services:
-  rabbit-user:
-    image: rabbitmq:3.12.0-management
-    hostname: rabbit-user
-    container_name: rabbit-user
-    ports:
-      - 8085:15672
-      - 5672:5672
-    networks:
-      - user
-  redis:
-    image: docker.io/redis:7.2.3
-    container_name: redis
+#  rabbit-user:
+#    image: rabbitmq:3.12.0-management
+#    hostname: rabbit-user
+#    container_name: rabbit-user
+#    ports:
+#      - 8085:15672
+#      - 5672:5672
+#    networks:
+#      - user
+  redis-1:
+    image: redis:6.0-alpine
+    container_name: redis-1
     volumes:
-      - ./redis-data:/data
+      - ./Redis/RedisConfig/redis-data-1:/data
+      - ./Redis/RedisConfig/redis-1:/etc/redis/redis.conf
+      - ./Redis/RedisConfig/RedisSentinel/sentinel-1:/etc/redis/sentinel.conf
     ports:
       - 6379:6379
+    networks:
+      - user
+  redis-2:
+    image: redis:6.0-alpine
+    container_name: redis-2
+    volumes:
+      - ./Redis/RedisConfig/redis-data-2:/data
+      - ./Redis/RedisConfig/redis-2:/etc/redis/redis.conf
+      - ./Redis/RedisConfig/RedisSentinel/sentinel-2:/etc/redis/sentinel.conf
+    ports:
+      - 6378:6379
+    networks:
+      - user
+  redis-3:
+    image: redis:6.0-alpine
+    container_name: redis-3
+    volumes:
+      - ./Redis/RedisConfig/redis-data-3:/data
+      - ./Redis/RedisConfig/redis-3:/etc/redis/redis.conf
+      - ./Redis/RedisConfig/RedisSentinel/sentinel-3:/etc/redis/sentinel.conf
+    ports:
+      - 6377:6379
+    networks:
+      - user
+#  sentinel-1:
+#    image: redis:6.0-alpine
+#    container_name: sentinel-1
+#    volumes:
+#      - ./RedisSentinel/sentinel-1:/etc/sentinel.conf
+#    networks:
+#      - user
+#
+#  sentinel-2:
+#    image: redis:6.0-alpine
+#    container_name: sentinel-2
+#    volumes:
+#    - ./RedisSentinel/sentinel-2:/etc/sentinel.conf
+#    networks:
+#    - user
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    volumes:
+      - ./HAproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+    ports:
+      - 5000:5000
+      - 9000:9000
     networks:
       - user
 networks:
